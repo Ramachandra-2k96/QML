@@ -1,0 +1,19 @@
+[project]
+name = "plant"
+version = "0.1.0"
+description = "Optimizing Crop Disease and Yield Prediction Using ML and Quantum Machine Learning Techniques"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=3.0.3",
+    "numpy>=2.0.0",
+    "scikit-learn>=1.4.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "torch>=2.2.0",
+    "torchvision>=0.17.0",
+    "pennylane>=0.35.0",
+    "qiskit>=1.0.0",
+    "qiskit-machine-learning>=0.7.2",
+    "ipykernel>=6.29.0",
+]
