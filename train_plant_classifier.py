@@ -92,12 +92,12 @@ test_loader  = DataLoader(test_ds,  batch_size=BATCH_SIZE, shuffle=False,
 # ─────────────────────────── Model factory ────────────────────
 def build_model(arch: str) -> nn.Module:
     """Build full fine-tune model (no frozen layers)."""
-    if arch == "resnet50":
-        m = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
-        m.fc = nn.Linear(m.fc.in_features, NUM_CLASSES)
-    elif arch == "mobilenet_v2":
-        m = models.mobilenet_v2(weights=models.MobileNet_V2_Weights.IMAGENET1K_V1)
-        m.classifier[1] = nn.Linear(m.classifier[1].in_features, NUM_CLASSES)
+    if arch == "resnet18":
+        m = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+        m.fc = nn.Linear(m.fc.in_features, NUM_CLASSES)        # 512 → 38
+    elif arch == "mobilenet_v3_small":
+        m = models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.IMAGENET1K_V1)
+        m.classifier[3] = nn.Linear(m.classifier[3].in_features, NUM_CLASSES)  # 1024 → 38
     else:
         raise ValueError(f"Unknown arch: {arch}")
     return m.to(DEVICE)
@@ -206,18 +206,18 @@ def train_model(arch: str, save_path: str):
     return best_val_acc, test_acc, all_preds, all_labels
 
 # ─────────────────────────── Run ──────────────────────────────
-res_val, res_test, res_preds, res_labels = train_model("resnet50",    "plant_resnet50.pth")
-mob_val, mob_test, mob_preds, mob_labels = train_model("mobilenet_v2","plant_mobilenet.pth")
+res_val, res_test, res_preds, res_labels = train_model("resnet18",         "plant_resnet18.pth")
+mob_val, mob_test, mob_preds, mob_labels = train_model("mobilenet_v3_small","plant_mobilenet_v3s.pth")
 
 # Save class names separately for convenience
 with open("plant_class_names.pkl", "wb") as f:
     pickle.dump(class_names, f)
 
 print("\n[DONE] Saved:")
-print("  • plant_resnet50.pth")
-print("  • plant_mobilenet.pth")
+print("  • plant_resnet18.pth")
+print("  • plant_mobilenet_v3s.pth")
 print("  • plant_class_names.pkl")
 
 print("\n[SUMMARY]")
-print(f"  ResNet-50   : Val Acc = {res_val:.4f}  |  Test Acc = {res_test:.4f}")
-print(f"  MobileNet-V2: Val Acc = {mob_val:.4f}  |  Test Acc = {mob_test:.4f}")
+print(f"  ResNet-18         : Val Acc = {res_val:.4f}  |  Test Acc = {res_test:.4f}")
+print(f"  MobileNet-V3-Small: Val Acc = {mob_val:.4f}  |  Test Acc = {mob_test:.4f}")
