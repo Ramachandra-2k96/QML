@@ -119,15 +119,14 @@ flowchart TD
     end
 
     subgraph Modeling ["3. Model Training & Processing"]
-        D1 & D2 --> E1["Quantum Support Vector Machine (QSVM)"]
-        D1 & D2 --> E2["Quantum Neural Networks (QNN / PQC)"]
-        B1 --> F1["Classical CNN (PlantVillage Classification)"]
-        B2 --> F2["Classical Random Forest (Yield Regression)"]
+        D1 & D2 --> E1["Hybrid Quantum Neural Networks (QNN)"]
+        B1 --> F1["Classical CNN (Plant Disease Classification)"]
+        B2 --> F2["Classical Deep Neural Network (Yield Regression)"]
     end
 
     subgraph Execution ["4. Prediction & Output"]
-        E1 & F1 --> G1[Crop Disease Classification]
-        E2 & F2 --> G2[Crop Yield Prediction & Regressor]
+        F1 --> G1[Crop Disease Classification]
+        E1 & F2 --> G2[Crop Yield Prediction & Regressor]
     end
 
     subgraph Evaluation ["5. Performance Evaluation"]
@@ -153,13 +152,29 @@ flowchart TD
 ├── README.md                # Project documentation & abstract details
 ├── main.py                  # Project entry point and environment sanity check
 ├── exploration.ipynb        # Jupyter Notebook containing data exploratory cells
-├── crop_yield.csv           # Secondary Dataset: Multimodal historical environmental & yield records
-└── plantvillage dataset/    # Primary Dataset: Image library divided into 38 disease categories
-    ├── Apple___Apple_scab/
-    ├── Apple___Black_rot/
-    ├── Apple___healthy/
-    ├── Tomato___Bacterial_spot/
-    └── ... (38 subdirectories in total)
+│
+├── 🌿 Pipeline 1: Plant Disease Classification (Image Data)
+│   ├── plant_classifier.ipynb        # CNN Model Evaluation & Visualization
+│   ├── train_plant_classifier.py     # Classical CNN Training Script
+│   └── plantvillage dataset/         # Primary Dataset: Image library divided into 38 disease categories
+│       ├── Apple___Apple_scab/
+│       ├── Apple___Black_rot/
+│       ├── Apple___healthy/
+│       ├── Tomato___Bacterial_spot/
+│       └── ... (38 subdirectories in total)
+│
+└── 🌾 Pipeline 2: Crop Yield Prediction (Tabular Data)
+    ├── crop_yield.csv                # Secondary Dataset: Multimodal historical environmental & yield records
+    │
+    ├── Classical Models:
+    │   ├── crop_yield_nn.ipynb       # Classical Baseline Neural Network Evaluation
+    │   └── train_nn_crop_yield.py    # Classical Baseline Training Script
+    │
+    └── Quantum-Classical Hybrid Models:
+        ├── train_qnn_crop_yield.py           # Hybrid QNN Training (End-to-End & Feature Extraction)
+        ├── train_qnn_large_head_crop_yield.py# Large Classical Head Fine-tuning on Quantum Features
+        ├── qnn_crop_yield_small.ipynb        # Lightweight End-to-End Hybrid QNN Evaluation
+        └── qnn_crop_yield.ipynb              # End-to-End Hybrid QNN Evaluation with Large Head
 ```
 
 ---
