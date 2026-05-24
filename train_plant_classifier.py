@@ -28,7 +28,9 @@ EPOCHS     = 25
 LR_MAX     = 1e-3
 WEIGHT_DECAY = 1e-4
 SEED       = 42
+OUT_DIR    = "results/plant_disease"
 
+os.makedirs(OUT_DIR, exist_ok=True)
 torch.manual_seed(SEED)
 np.random.seed(SEED)
 
@@ -206,17 +208,21 @@ def train_model(arch: str, save_path: str):
     return best_val_acc, test_acc, all_preds, all_labels
 
 # ─────────────────────────── Run ──────────────────────────────
-res_val, res_test, res_preds, res_labels = train_model("resnet18",         "plant_resnet18.pth")
-mob_val, mob_test, mob_preds, mob_labels = train_model("mobilenet_v3_small","plant_mobilenet_v3s.pth")
+res18_path  = os.path.join(OUT_DIR, "plant_resnet18.pth")
+mob_v3_path = os.path.join(OUT_DIR, "plant_mobilenet_v3s.pth")
+class_path  = os.path.join(OUT_DIR, "plant_class_names.pkl")
+
+res_val, res_test, res_preds, res_labels = train_model("resnet18",         res18_path)
+mob_val, mob_test, mob_preds, mob_labels = train_model("mobilenet_v3_small",mob_v3_path)
 
 # Save class names separately for convenience
-with open("plant_class_names.pkl", "wb") as f:
+with open(class_path, "wb") as f:
     pickle.dump(class_names, f)
 
 print("\n[DONE] Saved:")
-print("  • plant_resnet18.pth")
-print("  • plant_mobilenet_v3s.pth")
-print("  • plant_class_names.pkl")
+print(f"  • {res18_path}")
+print(f"  • {mob_v3_path}")
+print(f"  • {class_path}")
 
 print("\n[SUMMARY]")
 print(f"  ResNet-18         : Val Acc = {res_val:.4f}  |  Test Acc = {res_test:.4f}")

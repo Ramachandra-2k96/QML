@@ -29,7 +29,12 @@ BATCH_SIZE = 512
 EPOCHS = 150
 LR = 3e-3
 WEIGHT_DECAY = 1e-4
-PATIENCE = 20          # early-stopping patience
+PATIENCE    = 15
+
+OUT_DIR = "results/crop_yield"
+os.makedirs(OUT_DIR, exist_ok=True)
+MODEL_PATH = os.path.join(OUT_DIR, "crop_yield_nn_model.pth")
+ASSETS_PATH = os.path.join(OUT_DIR, "crop_yield_nn_assets.pkl")
 
 torch.manual_seed(SEED)
 np.random.seed(SEED)
@@ -232,20 +237,14 @@ evaluate(train_loader, "Train")
 evaluate(val_loader,   "Validation")
 evaluate(test_loader,  "Test")
 
-# ─────────────────────────── 9. Save assets ───────────────────
-# 9a — model config + weights
-model_cfg = {"in_features": IN_FEATURES, "hidden": 512, "n_blocks": 6, "dropout": 0.2}
-torch.save({"config": model_cfg, "state_dict": best_state}, "crop_yield_nn_model.pth")
+# ─────────────────────────── Save Model & Assets ──────────────────────
+torch.save({
+    "state_dict": best_state,
+    "input_dim": X_train.shape[1],
+}, MODEL_PATH)
 
-# 9b — preprocessing assets
-assets = {
-    "scaler": scaler,
-    "target_maps": target_maps,
-    "global_mean": global_mean,
-}
-with open("crop_yield_nn_assets.pkl", "wb") as f:
-    pickle.dump(assets, f)
+with open(ASSETS_PATH, "wb") as f:
+    pickle.dump({"scaler": scaler, "target_maps": target_maps}, f)
 
-print("\n[DONE] Saved:")
-print("  • crop_yield_nn_model.pth")
-print("  • crop_yield_nn_assets.pkl")
+print(f"\n[DONE] Model saved to {MODEL_PATH}")
+print(f"[DONE] Assets saved to {ASSETS_PATH}")
