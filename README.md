@@ -252,3 +252,7 @@ This will run a automated diagnostic check that:
 2. Checks GPU acceleration (CUDA) status.
 3. Tests a live **Parameterized Quantum Circuit (PQC)** using a simulated 2-qubit quantum device in PennyLane.
 4. Performs a sanity load of the `crop_yield.csv` dataset, presenting high-level statistics.
+
+
+uv run uvicorn main:app --reload
+
